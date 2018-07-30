@@ -1,0 +1,7 @@
+[package]
+name = "bls12381-precompile"
+version = "0.1.0"
+authors = ["schaeff <thibaut@schaeff.fr>"]
+
+[dependencies]
+pairing = "0.14.2"
