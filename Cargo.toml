@@ -1,5 +1,5 @@
 [package]
-name = "bls12381-precompile"
+name = "ethereum-bls12"
 version = "0.1.0"
 authors = ["schaeff <thibaut@schaeff.fr>"]
 
