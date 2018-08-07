@@ -2,8 +2,8 @@ extern crate pairing;
 extern crate parity_bytes;
 extern crate rustc_hex;
 
-use pairing::bls12_381::{Bls12, G1Affine, G2Affine, G1, G2, Fq12};
-use pairing::{Engine, CurveAffine, EncodedPoint, Field, CurveProjective};
+use pairing::bls12_381::{Bls12, G1Affine, G2Affine, Fq12};
+use pairing::{Engine, CurveAffine, EncodedPoint, Field};
 
 use std::io::{self, Read};
 
@@ -70,7 +70,7 @@ fn read_bls12_pairing_input(mut input: &[u8]) -> Result<Vec<(<G1Affine as CurveA
 	Ok(res)
 }
 
-fn bls12_pairing(input: &[u8], output: &mut BytesRef) -> Result<(), Error> {
+pub fn bls12_pairing(input: &[u8], output: &mut BytesRef) -> Result<(), Error> {
 	let points = read_bls12_pairing_input(input);
 
 	let true_res = FromHex::from_hex("\
@@ -108,11 +108,11 @@ fn compute_pairing_check<'a, I>(i: I) -> bool
 	Bls12::final_exponentiation(&Bls12::miller_loop(i)).unwrap() == Fq12::one()
 }
 
-fn main () {}
-
 #[cfg(test)]
 mod tests {
 
+	use pairing::bls12_381::{G1, G2};
+	use pairing::CurveProjective;
 	use super::*;
 	use rustc_hex::FromHex;
 
