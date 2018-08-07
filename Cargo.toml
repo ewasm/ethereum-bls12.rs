@@ -5,3 +5,5 @@ authors = ["schaeff <thibaut@schaeff.fr>"]
 
 [dependencies]
 pairing = "0.14.2"
+parity-bytes = { git = "https://github.com/paritytech/parity-common" }
+rustc-hex = "1.0"
