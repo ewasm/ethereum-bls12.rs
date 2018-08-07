@@ -122,7 +122,7 @@ mod tests {
 	}
 
 	#[test]
-	fn random() {
+	fn unity() {
 		assert!(!compute_pairing_check(vec![&(&G1Affine::from(G1::one()).prepare(), &G2Affine::from(G2::one()).prepare())]))
 	}
 
