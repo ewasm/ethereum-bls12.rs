@@ -7,6 +7,16 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Update rustc
+          command: |
+            rustup component add rustfmt-preview
+      - run:
+           name: Check formatting
+           command: |
+             rustfmt --version
+             cargo fmt
+             git diff --exit-code
+      - run:
           name: Build
           command: cargo build --release
       - run:
