@@ -1,6 +1,6 @@
 [package]
 name = "ethereum-bls12"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["schaeff <thibaut@schaeff.fr>"]
 license = "Apache-2.0"
 repository = "https://github.com/ewasm/ethereum-bls12.rs"
