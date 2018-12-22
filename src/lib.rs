@@ -94,9 +94,7 @@ static FALSE_RES: [u8; 32] = [
 ];
 
 pub fn bls12_pairing(input: &[u8], output: &mut BytesRef) -> Result<(), Error> {
-    let points = read_bls12_pairing_input(input);
-
-    match points {
+    match read_bls12_pairing_input(input) {
         Ok(points) => {
             let refs: Vec<_> = points.iter().map(|(ref a, ref b)| (a, b)).collect();
             if compute_pairing_check(refs.iter()) {
