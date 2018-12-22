@@ -33,9 +33,6 @@ fn read_bls12_pairing_input(
     )>,
     Error,
 > {
-    let mut g1_repr = <G1Affine as CurveAffine>::Compressed::empty();
-    let mut g2_repr = <G2Affine as CurveAffine>::Compressed::empty();
-
     let length = input.len();
 
     if length % 144 != 0 {
@@ -45,6 +42,8 @@ fn read_bls12_pairing_input(
     let mut res = vec![];
 
     for _ in 0..length / 144 {
+        let mut g1_repr = <G1Affine as CurveAffine>::Compressed::empty();
+
         input.read_exact(g1_repr.as_mut())?;
 
         let a = g1_repr
@@ -60,6 +59,8 @@ fn read_bls12_pairing_input(
                     Ok(e)
                 }
             })?;
+
+        let mut g2_repr = <G2Affine as CurveAffine>::Compressed::empty();
 
         input.read_exact(g2_repr.as_mut())?;
 
