@@ -7,8 +7,6 @@ use pairing::{CurveAffine, EncodedPoint, Engine, Field};
 
 use std::io::{self, Read};
 
-use rustc_hex::FromHex;
-
 use parity_bytes::BytesRef;
 
 #[derive(Debug)]
@@ -88,13 +86,16 @@ fn read_bls12_pairing_input(
 pub fn bls12_pairing(input: &[u8], output: &mut BytesRef) -> Result<(), Error> {
     let points = read_bls12_pairing_input(input);
 
-    let true_res =
-        FromHex::from_hex("0000000000000000000000000000000000000000000000000000000000000001")
-            .unwrap();
-
-    let false_res =
-        FromHex::from_hex("0000000000000000000000000000000000000000000000000000000000000000")
-            .unwrap();
+    let true_res: [u8; 32] = [
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0x00, 0x01,
+    ];
+    let false_res: [u8; 32] = [
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00,
+    ];
 
     match points {
         Ok(points) => {
@@ -124,7 +125,6 @@ where
 
 #[cfg(test)]
 mod tests {
-
     use super::*;
     use pairing::bls12_381::{G1, G2};
     use pairing::CurveProjective;
