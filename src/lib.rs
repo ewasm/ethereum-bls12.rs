@@ -1,13 +1,10 @@
 extern crate pairing;
-extern crate parity_bytes;
 extern crate rustc_hex;
-
-use pairing::bls12_381::{Bls12, Fq12, G1Affine, G2Affine};
-use pairing::{CurveAffine, EncodedPoint, Engine, Field};
 
 use std::io::{self, Read};
 
-use parity_bytes::BytesRef;
+use pairing::bls12_381::{Bls12, Fq12, G1Affine, G2Affine};
+use pairing::{CurveAffine, EncodedPoint, Engine, Field};
 
 #[derive(Debug)]
 pub struct Error(String);
@@ -94,14 +91,14 @@ static FALSE_RES: [u8; 32] = [
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 ];
 
-pub fn bls12_pairing(input: &[u8], output: &mut BytesRef) -> Result<(), Error> {
+pub fn bls12_pairing(input: &[u8], output: &mut [u8; 32]) -> Result<(), Error> {
     match read_bls12_pairing_input(input) {
         Ok(points) => {
             let refs: Vec<_> = points.iter().map(|(ref a, ref b)| (a, b)).collect();
             if compute_pairing_check(refs.iter()) {
-                output.write(0, &TRUE_RES);
+                *output = TRUE_RES;
             } else {
-                output.write(0, &FALSE_RES);
+                *output = FALSE_RES;
             }
             Ok(())
         }
@@ -123,10 +120,11 @@ where
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use pairing::bls12_381::{G1, G2};
     use pairing::CurveProjective;
     use rustc_hex::FromHex;
+
+    use super::*;
 
     #[test]
     fn empty() {
@@ -145,14 +143,14 @@ mod tests {
     fn read_empty() {
         let input = FromHex::from_hex("").unwrap();
 
-        let mut output = vec![0u8; 32];
+        let mut output = [0u8; 32];
 
         let expected =
             FromHex::from_hex("0000000000000000000000000000000000000000000000000000000000000001")
                 .unwrap();
 
-        bls12_pairing(&input[..], &mut BytesRef::Fixed(&mut output[..])).unwrap();
-        assert_eq!(output, expected);
+        bls12_pairing(&input[..], &mut output).unwrap();
+        assert_eq!(output.to_vec(), expected);
     }
 
     #[test]
@@ -171,14 +169,14 @@ mod tests {
             .map(|x| *x)
             .collect();
 
-        let mut output = vec![0u8; 32];
+        let mut output = [0u8; 32];
 
         let expected =
             FromHex::from_hex("0000000000000000000000000000000000000000000000000000000000000001")
                 .unwrap();
 
-        bls12_pairing(&input[..], &mut BytesRef::Fixed(&mut output[..])).unwrap();
-        assert_eq!(output, expected);
+        bls12_pairing(&input[..], &mut output).unwrap();
+        assert_eq!(output.to_vec(), expected);
     }
 
     #[test]
@@ -195,13 +193,13 @@ mod tests {
             .map(|x| *x)
             .collect();
 
-        let mut output = vec![0u8; 32];
+        let mut output = [0u8; 32];
 
         let expected =
             FromHex::from_hex("0000000000000000000000000000000000000000000000000000000000000000")
                 .unwrap();
 
-        bls12_pairing(&input[..], &mut BytesRef::Fixed(&mut output[..])).unwrap();
-        assert_eq!(output, expected);
+        bls12_pairing(&input[..], &mut output).unwrap();
+        assert_eq!(output.to_vec(), expected);
     }
 }
